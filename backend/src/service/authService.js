@@ -2,10 +2,15 @@ import supabase from "../config/databaseConfig.js";
 
 const supabaseClient = supabase;
 
-export const createAuthUser = async (email, password) => {
+export const createAuthUser = async (email, password, displayName) => {
     const {data, error} = await supabaseClient.auth.signUp({
         email, 
         password,
+        options: {
+            data: {
+                full_name: displayName,
+            }
+        }
     });
     if (error) throw new Error(error.message);
     return data

@@ -2,8 +2,8 @@ import { createAuthUser, signInAuthUser } from "../service/authService.js";
 
 export async function registerUser(req, res) {
     try {
-        const {email, password} = req.body;
-        const data = await createAuthUser(email, password);
+        const {email, password, displayName} = req.body;
+        const data = await createAuthUser(email, password, displayName);
         console.log('Usuario criado! ', data);
         res.status(200);
     } catch (error) {
