@@ -1,0 +1,26 @@
+{
+  "name": "c1",
+  "version": "1.0.0",
+  "description": "Um projeto para fins de estudo, focado inicialmente na implementação de um sistema completo de autenticação de usuários.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install:all": "cd backend && npm install && cd ../frontend && npm install",
+    "dev:back": "cd backend && npm start",
+    "dev:front": "cd frontend && npm run dev",
+    "dev": "concurrently \"npm run dev:back\" \"npm run dev:front\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qualquercois1/Horus.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/qualquercois1/Horus/issues"
+  },
+  "homepage": "https://github.com/qualquercois1/Horus#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+} }
