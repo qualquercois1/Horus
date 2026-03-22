@@ -51,10 +51,10 @@ npm run dev
 
 ### Segurança
 - [x] Configuração Inicial;
-- [o] Integração frontend-backend para autenticação completa.
+- [ ] Integração frontend-backend para autenticação completa.
 
 ### Core (Wallet)
-- [o] Modelagem do banco de dados para carteiras e transações.
+- [ ] Modelagem do banco de dados para carteiras e transações.
 
 ### Jogos
-- [o] Criação do primeiro jogo base (e.g. Roleta).
+- [ ] Criação do primeiro jogo base (e.g. Roleta).
