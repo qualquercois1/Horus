@@ -1,13 +1,37 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleLogin = (e) => {
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Tentativa de login com:", email, password);
-  };
+    setError('');
+
+    try {
+      const response = await fetch('http://localhost:3001/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        setError(data.error || 'Erro ao logar.');
+        return
+      }
+
+      localStorage.setItem('@Horus:token', data.token);
+      localStorage.setItem('@Horus:user', JSON.stringify(data.user));
+
+      navigate('/dashboard');
+    } catch(err) {
+      setError('Erro de conexão com o servidor.');
+  } };
 
   return (
     <div className="flex items-center justify-center p-3 relative overflow-hidden">

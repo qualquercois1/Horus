@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleRegister = (e) => {
+  const navigate = useNavigate();
+
+  const handleRegister = async (e) => {
     e.preventDefault();
     setError('');
 
@@ -16,7 +20,27 @@ export default function Register() {
     } if (password.length < 6) {
       setError('A senha deve conter no mínimo 6 caracteres.');
       return;
-  } };
+    }
+
+    try {
+      const response = await fetch('http:localhost:3001/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: JSON.stringify({ name, email, password })
+      });
+
+      const data = await response.json();
+
+      if(!response.ok) {
+        setError(data.error || 'Erro no registro.');
+        return;
+      }
+
+      navigate('/login');
+    } catch {
+      setError('Erro de conexão com o servidor');
+    }
+  };
 
   return (
     <div className="flex items-center justify-center p-3 relative overflow-hidden">
