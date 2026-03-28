@@ -51,7 +51,8 @@ npm run dev
 
 ### Segurança
 - [x] Configuração Inicial;
-- [ ] Integração frontend-backend para autenticação completa.
+- [x] Integração frontend-backend para autenticação completa;
+- [ ] Migração para um banco de dados em nuvem.
 
 ### Core (Wallet)
 - [ ] Modelagem do banco de dados para carteiras e transações.
