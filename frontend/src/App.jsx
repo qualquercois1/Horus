@@ -5,6 +5,7 @@ import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Roulette from './pages/Roulette';
 
 import MainLayout from './components/MainLayout';
 import UnderConstruction from './pages/UnderConstruction';
@@ -20,6 +21,7 @@ function App() {
           <Route path="/register" element={<Register />} />
 
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/games/roulette" element={<Roulette />} />
 
 
           <Route path="/about" element={<UnderConstruction />} />

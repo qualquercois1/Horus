@@ -1,6 +1,5 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -9,9 +8,63 @@ datasource db {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
-  password String
-  name     String?
-  createdAt DateTime @default(now())
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  password     String
+  name         String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  wallet       Wallet?
+  transactions Transaction[]
+  gameRounds   GameRound[]
+}
+
+model Wallet {
+  id           Int           @id @default(autoincrement())
+  userId       Int           @unique
+  balanceCents Int           @default(100000)
+  currency     String        @default("BRL")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+}
+
+model Transaction {
+  id                 Int      @id @default(autoincrement())
+  userId             Int
+  walletId           Int
+  type               String
+  amountCents        Int
+  balanceBeforeCents Int
+  balanceAfterCents  Int
+  status             String   @default("COMPLETED")
+  description        String?
+  referenceType      String?
+  referenceId        Int?
+  createdAt          DateTime @default(now())
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  wallet             Wallet   @relation(fields: [walletId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([walletId, createdAt])
+  @@index([referenceType, referenceId])
+}
+
+model GameRound {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  game           String   @default("ROULETTE")
+  betType        String
+  betValue       String
+  betAmountCents Int
+  resultValue    Int
+  resultColor    String
+  payoutCents    Int      @default(0)
+  netCents       Int
+  status         String   @default("COMPLETED")
+  createdAt      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
 }

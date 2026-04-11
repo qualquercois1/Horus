@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -7,6 +8,7 @@ const Footer = () => {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 400);
     };
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -16,10 +18,10 @@ const Footer = () => {
   };
 
   return (
-    <footer className="relative text-gray-300 pt-16 pb-8">
+    <footer className="relative pt-16 pb-8 text-gray-300">
       <div className="absolute top-0 left-0 w-full overflow-hidden leading-none">
         <svg
-          className="relative block w-full h-12 text-[#d2d5db] dark:text-[#474554]"
+          className="relative block h-12 w-full text-[#d2d5db] dark:text-[#474554]"
           viewBox="0 0 1200 120"
           preserveAspectRatio="none"
           fill="currentColor"
@@ -31,15 +33,15 @@ const Footer = () => {
         </svg>
       </div>
 
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="flex flex-col md:flex-row justify-between items-center pt-8 text-sm text-gray-500">
+      <div className="container relative z-10 mx-auto px-6">
+        <div className="flex flex-col items-center justify-between pt-8 text-sm text-gray-500 md:flex-row">
           <p>
-            © {new Date().getFullYear()} Horus. Iniciativa{' '} 
+            © {new Date().getFullYear()} Horus. Iniciativa{' '}
             <a
               href="https://github.com/qualquercois1"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-gray-500 hover:text-gray-400 transition-colors duration-300"
+              className="font-medium text-gray-500 transition-colors duration-300 hover:text-gray-400"
             >
               Cássio Rodrigues
             </a>{' '}
@@ -48,14 +50,18 @@ const Footer = () => {
               href="https://github.com/efdourado"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-gray-500 hover:text-gray-400 transition-colors duration-300"
+              className="font-medium text-gray-500 transition-colors duration-300 hover:text-gray-400"
             >
               Eduardo Dourado
             </a>.
           </p>
-          <div className="flex space-x-6 mt-4 md:mt-0">
-            <a href="/privacy" className="hover:text-gray-400 transition-colors duration-300">Política de Privacidade</a>
-            <a href="/terms" className="hover:text-gray-400 transition-colors duration-300">Termos de Uso</a>
+          <div className="mt-4 flex space-x-6 md:mt-0">
+            <Link to="/privacy" className="transition-colors duration-300 hover:text-gray-400">
+              Política de Privacidade
+            </Link>
+            <Link to="/terms" className="transition-colors duration-300 hover:text-gray-400">
+              Termos de Uso
+            </Link>
           </div>
         </div>
       </div>
@@ -63,15 +69,16 @@ const Footer = () => {
       {showBackToTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 p-3 bg-amber-600 text-white rounded-full shadow-lg hover:bg-amber-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-400 z-50"
+          className="fixed right-8 bottom-8 z-50 rounded-lg bg-gray-500 p-3 text-white shadow-lg transition-all duration-300 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"
           aria-label="Voltar ao topo"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
           </svg>
         </button>
       )}
     </footer>
-); };
+  );
+};
 
 export default Footer;

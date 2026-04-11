@@ -17,3 +17,8 @@ frontend/build/
 # ------------------------------------------------
 backend/dist/
 backend/coverage/
+backend/prisma/*.db
+backend/prisma/*.db-journal
+backend/src/generated/
+
+.codex

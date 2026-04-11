@@ -1,22 +1,35 @@
 import React from 'react';
+import BrandMark from './BrandMark';
+import Button from './ui/Button';
+import { Page } from './ui/Page';
 
 const Hero = () => {
   return (
-    <section className="flex items-center justify-center p-12">
-      <div className="max-w-2xl w-full text-center">
-        <h1 className="text-4xl font-display font-bold text-gray-500 dark:text-gray-300 tracking-wider">
-          HORUS
+    <Page className="flex min-h-[calc(100vh-9rem)] items-center justify-center">
+      <div className="max-w-2xl text-center">
+        <div className="mb-8 flex justify-center">
+          <BrandMark to={null} />
+        </div>
+        <p className="mb-3 text-sm font-medium text-gray-400">
+          Local-first
+        </p>
+        <h1 className="text-4xl font-light leading-tight tracking-tight text-gray-700 dark:text-gray-300 sm:text-5xl">
+          Saldo local. Jogo auditavel. Interface pronta para crescer.
         </h1>
-        <p className="text-gray-400 mt-3 text-md font-sans">
-          Estudo e aprimoramento técnico de arquitetura, segurança, concorrência e engenharia de software full-stack.
+        <p className="mx-auto mt-5 max-w-xl text-sm font-medium leading-relaxed text-gray-500 dark:text-gray-400">
+          Carteira, transacoes e roleta em uma base simples para evoluir com seguranca.
         </p>
-
-        <p className="text-lg mt-6 text-gray-400 leading-relaxed">
-          Segurança | Infraestrutura | Consistência | Insights | Modelagem | Otimização
-        </p>
-
+        <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+          <Button to="/games/roulette" size="lg">
+            Roleta
+          </Button>
+          <Button to="/dashboard" variant="secondary" size="lg">
+            Carteira
+          </Button>
+        </div>
       </div>
-    </section>
-); };
+    </Page>
+  );
+};
 
 export default Hero;
