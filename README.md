@@ -1,8 +1,8 @@
 # Horus
 
-Horus e um estudo full-stack de arquitetura, autenticacao, carteira local, transacoes e jogos com dinheiro ficticio. A ideia atual nao e criar um cassino real, mas construir uma base tecnica onde cada decisao importante fique visivel: como o saldo muda, como a rodada e registrada, qual e a matematica do jogo e onde entram as proximas camadas de seguranca.
+Horus e um estudo full-stack de arquitetura, autenticacao, carteira, transacoes e jogos com dinheiro ficticio. A ideia atual nao e criar um cassino real, mas construir uma base tecnica onde cada decisao importante fique visivel: como o saldo muda, como a rodada e registrada, qual e a matematica do jogo e onde entram as proximas camadas de seguranca.
 
-O projeto esta em modo local-first. O banco atual e SQLite via Prisma, entao ainda nao existe dependencia de banco em nuvem.
+O projeto nasceu local-first, mas o banco atual usa PostgreSQL via Prisma e pode rodar com Neon em desenvolvimento.
 
 ---
 
@@ -10,7 +10,7 @@ O projeto esta em modo local-first. O banco atual e SQLite via Prisma, entao ain
 
 - Frontend: React, Vite, Tailwind CSS e React Router.
 - Backend: Node.js, Express, JWT e bcrypt.
-- Banco local: SQLite com Prisma.
+- Banco: PostgreSQL com Prisma, usando Neon quando `DATABASE_URL` aponta para a nuvem.
 - Dominio atual: usuarios, carteiras, transacoes e roleta.
 
 ---
@@ -57,6 +57,8 @@ Arquivos auxiliares:
 - `frontend/src/config/api.js`: URL base da API. Usa `VITE_API_URL` quando existir e cai para `http://localhost:3001/api`.
 - `frontend/src/utils/auth.js`: sessao local.
 - `frontend/src/utils/formatters.js`: formatacao de dinheiro.
+- `frontend/src/components/ProtectedRoute.jsx`: protecao das rotas autenticadas.
+- `frontend/docs/component-states.md`: guia curto de estados visuais dos componentes.
 
 ---
 
@@ -70,12 +72,12 @@ Na raiz do projeto:
 npm run install:all
 ```
 
-### 2. Configurar banco local
+### 2. Configurar banco
 
 Crie `backend/.env` com:
 
 ```bash
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="postgresql://usuario:senha@host/neondb?sslmode=require"
 ```
 
 Depois aplique as migracoes:
@@ -85,7 +87,17 @@ cd backend
 npx prisma migrate dev
 ```
 
-### 3. Iniciar frontend e backend
+Se estiver usando Neon, use a connection string do projeto. A URL pooled tambem funciona para o fluxo atual.
+
+### 3. Rodar testes
+
+Na raiz do projeto:
+
+```bash
+npm test
+```
+
+### 4. Iniciar frontend e backend
 
 Na raiz do projeto:
 
@@ -108,6 +120,7 @@ Se a porta `5173` ja estiver ocupada, o Vite escolhe a proxima porta livre e mos
 - `/login` - entrada com e-mail e senha.
 - `/register` - criacao de conta.
 - `/dashboard` - resumo da carteira local e acesso aos jogos.
+- `/transactions` - extrato paginado da carteira.
 - `/games/roulette` - primeira mesa jogavel.
 - `/about`, `/privacy`, `/terms` - paginas reservadas.
 
@@ -132,6 +145,12 @@ Se a porta `5173` ja estiver ocupada, o Vite escolhe a proxima porta livre e mos
 - `GET /api/me/wallet`
   - Requer `Authorization: Bearer <token>`.
   - Retorna carteira, ultimas transacoes e rodadas recentes.
+
+### Transacoes
+
+- `GET /api/me/transactions?page=1&pageSize=10`
+  - Requer `Authorization: Bearer <token>`.
+  - Retorna transacoes paginadas e metadados de paginacao.
 
 ### Jogos
 
@@ -237,7 +256,7 @@ Mesmo com pagamento maior, a chance de acerto e menor, entao a vantagem da mesa 
 - [x] Frontend React com rotas principais.
 - [x] Backend Express com autenticacao por JWT.
 - [x] Registro e login com senha criptografada.
-- [x] Banco local SQLite com Prisma.
+- [x] Banco PostgreSQL com Prisma e migracoes para Neon.
 - [x] Modelagem de usuario, carteira, transacoes e rodadas.
 - [x] Carteira local criada automaticamente no registro.
 - [x] Ledger basico com saldo antes e depois de cada operacao.
@@ -245,16 +264,24 @@ Mesmo com pagamento maior, a chance de acerto e menor, entao a vantagem da mesa 
 - [x] Tela de roleta com saldo, apostas, resultado, transacoes e historico.
 - [x] Design system inicial com componentes reutilizaveis.
 - [x] Configuracao central da URL da API no frontend.
+- [x] Backend separado em rotas, controllers e services.
+- [x] Middleware de validacao de entrada.
+- [x] Tratamento centralizado de erros no backend.
+- [x] Testes automatizados para carteira, roleta e paginacao de transacoes.
+- [x] Endpoint de transacoes paginadas.
+- [x] Tela dedicada de extrato.
+- [x] Logout e protecao de rotas autenticadas no frontend.
+- [x] Documentacao visual curta para estados de componente.
 
 ### Proximos Passos Curtos
 
-- [ ] Separar `app.js` em rotas, controllers e services.
-- [ ] Criar middleware de validacao de entrada.
-- [ ] Criar testes automatizados para carteira e roleta.
-- [ ] Adicionar endpoint para listar transacoes paginadas.
-- [ ] Adicionar tela dedicada de extrato.
-- [ ] Melhorar logout e protecao de rotas no frontend.
-- [ ] Criar documentacao visual curta para estados de componente.
+- [x] Separar `app.js` em rotas, controllers e services.
+- [x] Criar middleware de validacao de entrada.
+- [x] Criar testes automatizados para carteira e roleta.
+- [x] Adicionar endpoint para listar transacoes paginadas.
+- [x] Adicionar tela dedicada de extrato.
+- [x] Melhorar logout e protecao de rotas no frontend.
+- [x] Criar documentacao visual curta para estados de componente.
 
 ### Core De Carteira
 
@@ -278,11 +305,11 @@ Mesmo com pagamento maior, a chance de acerto e menor, entao a vantagem da mesa 
 - [ ] Adicionar rate limit em login, registro e apostas.
 - [ ] Validar CORS por ambiente.
 - [ ] Adicionar logs estruturados.
-- [ ] Adicionar tratamento centralizado de erros.
-- [ ] Migrar para banco em nuvem quando a modelagem local estiver estavel.
+- [x] Adicionar tratamento centralizado de erros.
+- [x] Migrar para banco em nuvem quando a modelagem local estiver estavel.
 
 ---
 
 ## Observacao Importante
 
-Todo o saldo atual e ficticio e local. Este projeto deve ser tratado como estudo de engenharia de software, nao como produto financeiro ou jogo com dinheiro real.
+Todo o saldo atual e ficticio, mesmo quando salvo em banco em nuvem. Este projeto deve ser tratado como estudo de engenharia de software, nao como produto financeiro ou jogo com dinheiro real.

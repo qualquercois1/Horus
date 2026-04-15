@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AuthShell from '../components/AuthShell';
 import Button from '../components/ui/Button';
 import Notice from '../components/ui/Notice';
 import TextField from '../components/ui/TextField';
 import { API_URL } from '../config/api';
-import { saveSession } from '../utils/auth';
+import { hasSession, saveSession } from '../utils/auth';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -13,6 +13,14 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const destination = location.state?.from || '/dashboard';
+
+  useEffect(() => {
+    if (hasSession()) {
+      navigate(destination, { replace: true });
+    }
+  }, [destination, navigate]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -33,7 +41,7 @@ export default function Login() {
       }
 
       saveSession(data);
-      navigate('/dashboard');
+      navigate(destination, { replace: true });
     } catch {
       setError('Erro de conexao com o servidor.');
     } finally {

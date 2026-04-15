@@ -1,19 +1,34 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import BrandMark from './BrandMark';
 import ThemeToggle from './ThemeToggle';
 import Button from './ui/Button';
+import { clearSession, hasSession, onSessionChange } from '../utils/auth';
 
 const navLinks = [
   { to: '/', label: 'Início' },
   { to: '/games/roulette', label: 'Roleta' },
-  { to: '/dashboard', label: 'Carteira' },
+  { to: '/dashboard', label: 'Carteira', authOnly: true },
+  { to: '/transactions', label: 'Extrato', authOnly: true },
   { to: '/about', label: 'Sobre' },
 ];
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(hasSession());
+  const navigate = useNavigate();
   const closeMenu = () => setIsMenuOpen(false);
+  const visibleLinks = navLinks.filter((link) => !link.authOnly || isAuthenticated);
+
+  useEffect(() => onSessionChange(() => {
+    setIsAuthenticated(hasSession());
+  }), []);
+
+  const handleLogout = () => {
+    clearSession();
+    closeMenu();
+    navigate('/login', { replace: true });
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-400 bg-[#d2d5db] dark:border-gray-500 dark:bg-[#474554]">
@@ -31,7 +46,7 @@ const Header = () => {
         </button>
 
         <nav className="hidden items-center space-x-8 md:flex">
-          {navLinks.map((link) => (
+          {visibleLinks.map((link) => (
             <NavLink
               key={link.to}
               to={link.to}
@@ -44,9 +59,15 @@ const Header = () => {
           ))}
           <div className="flex items-center space-x-4 border-l border-gray-400/50 pl-4 dark:border-gray-400/20">
             <ThemeToggle />
-            <Button to="/login" variant="header" size="sm">
-              Entrar
-            </Button>
+            {isAuthenticated ? (
+              <Button type="button" variant="header" size="sm" onClick={handleLogout}>
+                Sair
+              </Button>
+            ) : (
+              <Button to="/login" variant="header" size="sm">
+                Entrar
+              </Button>
+            )}
           </div>
         </nav>
       </div>
@@ -54,7 +75,7 @@ const Header = () => {
       {isMenuOpen && (
         <nav className="border-t border-gray-400/50 px-6 py-4 dark:border-gray-400/20 md:hidden">
           <div className="flex flex-col gap-2">
-            {navLinks.map((link) => (
+            {visibleLinks.map((link) => (
               <NavLink
                 key={link.to}
                 to={link.to}
@@ -68,9 +89,21 @@ const Header = () => {
                 {link.label}
               </NavLink>
             ))}
-            <Button to="/login" variant="header" size="sm" className="mt-2" onClick={closeMenu}>
-              Entrar
-            </Button>
+            {isAuthenticated ? (
+              <Button
+                type="button"
+                variant="header"
+                size="sm"
+                className="mt-2"
+                onClick={handleLogout}
+              >
+                Sair
+              </Button>
+            ) : (
+              <Button to="/login" variant="header" size="sm" className="mt-2" onClick={closeMenu}>
+                Entrar
+              </Button>
+            )}
           </div>
         </nav>
       )}

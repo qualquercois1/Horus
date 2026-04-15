@@ -6,8 +6,10 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Roulette from './pages/Roulette';
+import Transactions from './pages/Transactions';
 
 import MainLayout from './components/MainLayout';
+import ProtectedRoute from './components/ProtectedRoute';
 import UnderConstruction from './pages/UnderConstruction';
 
 function App() {
@@ -20,8 +22,11 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/games/roulette" element={<Roulette />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/games/roulette" element={<Roulette />} />
+            <Route path="/transactions" element={<Transactions />} />
+          </Route>
 
 
           <Route path="/about" element={<UnderConstruction />} />

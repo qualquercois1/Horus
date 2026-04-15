@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '../components/ui/Button';
 import Notice from '../components/ui/Notice';
 import { Page, Panel, SectionHeader } from '../components/ui/Page';
@@ -10,9 +11,15 @@ import { formatCents } from '../utils/formatters';
 const Dashboard = () => {
   const token = getAuthToken();
   const user = getStoredUser() || { name: 'Visitante' };
+  const navigate = useNavigate();
   const [wallet, setWallet] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(Boolean(token));
+
+  const handleLogout = () => {
+    clearSession();
+    navigate('/login', { replace: true });
+  };
 
   useEffect(() => {
     async function loadWallet() {
@@ -51,7 +58,7 @@ const Dashboard = () => {
         eyebrow={`Ola, ${user.name}`}
         title="Carteira"
         action={(
-          <Button to="/" variant="ghost" onClick={clearSession}>
+          <Button type="button" variant="ghost" onClick={handleLogout}>
             Sair
           </Button>
         )}
@@ -83,9 +90,14 @@ const Dashboard = () => {
               Aposte com saldo local. Cada rodada gera transacoes e historico.
             </p>
           </div>
-          <Button to="/games/roulette">
-            Abrir mesa
-          </Button>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Button to="/transactions" variant="secondary">
+              Ver extrato
+            </Button>
+            <Button to="/games/roulette">
+              Abrir mesa
+            </Button>
+          </div>
         </Panel>
       </div>
     </Page>

@@ -7,7 +7,7 @@ import Stat from '../components/ui/Stat';
 import TextField from '../components/ui/TextField';
 import { API_URL } from '../config/api';
 import { getAuthToken } from '../utils/auth';
-import { formatCents } from '../utils/formatters';
+import { formatCents, formatDateTime } from '../utils/formatters';
 
 const redNumbers = new Set([
   1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36,
@@ -203,12 +203,17 @@ export default function Roulette() {
         eyebrow="Roleta"
         title="Faca sua aposta."
         action={(
-          <Stat
-            label="Saldo"
-            value={loading ? 'Carregando...' : formatCents(wallet?.balanceCents)}
-            helper={wallet?.currency || 'BRL'}
-            className="min-w-56"
-          />
+          <div className="flex flex-col gap-2">
+            <Stat
+              label="Saldo"
+              value={loading ? 'Carregando...' : formatCents(wallet?.balanceCents)}
+              helper={wallet?.currency || 'BRL'}
+              className="min-w-56"
+            />
+            <Button to="/transactions" variant="secondary" className="w-full">
+              Ver extrato
+            </Button>
+          </div>
         )}
       >
         Uma mesa simples: escolha, gire, registre.
@@ -304,10 +309,7 @@ export default function Roulette() {
               <ListItem
                 key={transaction.id}
                 title={transaction.description || transaction.type}
-                meta={new Date(transaction.createdAt).toLocaleString('pt-BR', {
-                  dateStyle: 'short',
-                  timeStyle: 'short',
-                })}
+                meta={formatDateTime(transaction.createdAt)}
                 value={formatCents(transaction.amountCents)}
                 tone={getTransactionTone(transaction.type)}
               />

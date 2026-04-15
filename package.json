@@ -4,7 +4,8 @@
   "description": "Um projeto para fins de estudo, focado inicialmente na implementação de um sistema completo de autenticação de usuários.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm --prefix backend test",
+    "test:back": "npm --prefix backend test",
     "install:all": "cd backend && npm install && cd ../frontend && npm install",
     "dev:back": "cd backend && npm start",
     "dev:front": "cd frontend && npm run dev",
